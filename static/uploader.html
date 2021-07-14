@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>image uploader</title>
+    <style>
+      table, th, td {
+        border: 0.5vmin solid black;
+        border-collapse: collapse;
+      }
+      th, td {
+        padding: 2vmin;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="title">image uploader</h1>
+    <button id="button">upload file</button>
+    <input id="input" type="file" accept="image/*" style="display:none">
+    <table id="table">
+      <tr>
+        <th>url</th>
+        <th>preview</th>
+        <th>date created</th>
+        <th>delete</th>
+      </tr>
+    </table>
+    <script>
+      let title = document.getElementById("title");
+      let button = document.getElementById("button");
+      let input = document.getElementById("input");
+      let table = document.getElementById("table");
+
+      button.addEventListener("click", () => {
+          input.click();
+      });
+      input.addEventListener("change", async () => {
+          let reader = new FileReader();
+          reader.readAsArrayBuffer(input.files[0]);
+          reader.addEventListener("load", () => {
+              fetch("/config.password", {
+                  method: "post",
+                  headers: {
+                      "Content-Type": "application/octet-stream"
+                  },
+                  body: reader.result
+              }).then(data => data.json()).then(json => {
+                  loadTable(json);
+                  input.value = "";
+              });
+          });
+      });
+      
+      fetch("/config.password").then(data => data.json()).then(loadTable);
+      function loadTable(json) {
+          table.innerHTML = table.firstElementChild.innerHTML;
+          for (const image of json) {
+              table.innerHTML += `<tr><td>${image.url}</td><td><img src="${image.url}" style="width: 5vmin"></td><td>${image.date}</td><td><input type="button" class="delete" id="${image.url.split("/")[image.url.split("/").length - 1]}" value="delete" onclick="deleteImage(event)"></td></tr>`;
+          }
+      }
+      function deleteImage(event) {
+          fetch("/config.password", {
+              method: "delete",
+              headers: {
+                  image: event.target.id
+              }
+          }).then(data => {
+              if (data.status != 200) {
+                  let titleText = title.innerHTML;
+                  title.innerHTML = "an error occured, please try again";
+                  setTimeout(() => title.innerHTML = titleText, 10000);
+              } else data.json().then(loadTable);
+          });
+      }
+    </script>
+  </body>
+</html>

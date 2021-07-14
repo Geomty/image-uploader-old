@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>image uploader</title>
+  </head>
+  <body>
+    <h1>image uploader</h1>
+    <div>
+      <label for="password">password:</label>
+      <input type="password" id="password">
+      <input type="button" id="submit" value="enter">
+    </div>
+    <p id="text"></p>
+    <script>
+      let password = document.getElementById("password");
+      let submit = document.getElementById("submit");
+      let text = document.getElementById("text");
+      let boolean = false;
+
+      submit.addEventListener("click", auth);
+      password.addEventListener("focus", () => boolean = true);
+      password.addEventListener("blur", () => boolean = false);
+      window.addEventListener("keypress", event => {
+          if (event.key == "Enter" && boolean) auth();
+      });
+      function auth() {
+          fetch("/", {
+              method: "post",
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify({ password: password.value })
+          }).then(data => {
+              if (data.status == 401) return text.innerHTML = "wrong password";
+              data.text().then(text => document.write(text));
+          });
+      }
+    </script>
+  </body>
+</html>

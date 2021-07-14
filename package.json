@@ -1,0 +1,27 @@
+{
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "name": "image-uploader",
+  "version": "1.0.0",
+  "description": "a random image uploader i made",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Geomty/image-uploader.git"
+  },
+  "keywords": [
+    "image",
+    "uploader"
+  ],
+  "author": "Geomty",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Geomty/image-uploader/issues"
+  },
+  "homepage": "https://github.com/Geomty/image-uploader#readme"
+}
