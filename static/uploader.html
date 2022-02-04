@@ -35,14 +35,14 @@
       });
       input.addEventListener("change", async () => {
           let reader = new FileReader();
-          reader.readAsArrayBuffer(input.files[0]);
+          reader.readAsDataURL(input.files[0]);
           reader.addEventListener("load", () => {
               fetch("/config.password", {
                   method: "post",
                   headers: {
-                      "Content-Type": "application/octet-stream"
+                      "Content-Type": "text/plain"
                   },
-                  body: reader.result
+                  body: reader.result.split(",")[1]
               }).then(data => data.json()).then(json => {
                   loadTable(json);
                   input.value = "";

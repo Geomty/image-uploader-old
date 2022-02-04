@@ -22,7 +22,7 @@ app.post("/", (req, res) => {
 app.get(`/${config.password}`, (req, res) => {
     res.send2(loadImages(req));
 });
-app.post(`/${config.password}`, express.raw(), (req, res) => {
+app.post(`/${config.password}`, express.text(), (req, res) => {
     let id;
     let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     do {
@@ -32,7 +32,7 @@ app.post(`/${config.password}`, express.raw(), (req, res) => {
         }
     } while (fs.existsSync(`./uploads/${id}`));
 
-    fs.appendFileSync(`./uploads/${id}.png`, req.body);
+    fs.appendFileSync(`./uploads/${id}.png`, Buffer.from(req.body, "base64"));
     res.status(201).send(loadImages(req));
 });
 app.delete(`/${config.password}`, (req, res) => {
