@@ -1,8 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>image uploader</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+      #input {
+        display: none;
+      }
       table, th, td {
         border: 0.5vmin solid black;
         border-collapse: collapse;
@@ -15,7 +20,7 @@
   <body>
     <h1 id="title">image uploader</h1>
     <button id="button">upload file</button>
-    <input id="input" type="file" accept="image/*" style="display:none">
+    <input id="input" type="file" accept="image/*">
     <table id="table">
       <tr>
         <th>url</th>
@@ -29,6 +34,7 @@
       let button = document.getElementById("button");
       let input = document.getElementById("input");
       let table = document.getElementById("table");
+      let titleText = title.innerHTML;
 
       button.addEventListener("click", () => {
           input.click();
@@ -43,9 +49,16 @@
                       "Content-Type": "text/plain"
                   },
                   body: reader.result.split(",")[1]
-              }).then(data => data.json()).then(json => {
-                  loadTable(json);
-                  input.value = "";
+              }).then(data => {
+                  if (data.status == "413") {
+                      title.innerHTML = "file was too large, please try again";
+                      setTimeout(() => title.innerHTML = titleText, 10000);
+                  } else {
+                      data.json().then(json => {
+                          loadTable(json);
+                          input.value = "";
+                      });
+                  }
               });
           });
       });
@@ -65,7 +78,6 @@
               }
           }).then(data => {
               if (data.status != 200) {
-                  let titleText = title.innerHTML;
                   title.innerHTML = "an error occured, please try again";
                   setTimeout(() => title.innerHTML = titleText, 10000);
               } else data.json().then(loadTable);

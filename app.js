@@ -22,7 +22,7 @@ app.post("/", (req, res) => {
 app.get(`/${config.password}`, (req, res) => {
     res.send2(loadImages(req));
 });
-app.post(`/${config.password}`, express.text(), (req, res) => {
+app.post(`/${config.password}`, express.text({ limit: "1gb" }), (req, res) => {
     let id;
     let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     do {
