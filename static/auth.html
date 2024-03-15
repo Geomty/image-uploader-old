@@ -33,8 +33,11 @@
               },
               body: JSON.stringify({ password: password.value })
           }).then(data => {
-              if (data.status == 401) return text.innerHTML = "wrong password";
-              data.text().then(text => document.write(text));
+              if (data.status == 401) {
+                  text.innerHTML = "wrong password";
+              } else {
+                  data.text().then(t => document.write(t));
+              }
           });
       }
     </script>

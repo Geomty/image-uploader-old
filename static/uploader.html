@@ -66,8 +66,13 @@
       fetch("/config.password").then(data => data.json()).then(loadTable);
       function loadTable(json) {
           table.innerHTML = table.firstElementChild.innerHTML;
+          const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+          const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
           for (const image of json) {
-              table.innerHTML += `<tr><td>${image.url}</td><td><img src="${image.url}" style="width: 5vmin"></td><td>${image.date}</td><td><input type="button" class="delete" id="${image.url.split("/")[image.url.split("/").length - 1]}" value="delete" onclick="deleteImage(event)"></td></tr>`;
+              date = new Date(image.date);
+              dateStr = `${days[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}, ${date.getHours() % 12 || 12}:${date.getMinutes()}:${date.getSeconds()} ${date.getHours() < 12 ? "AM" : "PM"}`
+              url = window.location.href + image.file
+              table.innerHTML += `<tr><td>${url}</td><td><img src="${url}" style="width: 5vmin"></td><td>${dateStr}</td><td><input type="button" class="delete" id="${image.file}" value="delete" onclick="deleteImage(event)"></td></tr>`;
           }
       }
       function deleteImage(event) {
@@ -82,6 +87,7 @@
                   setTimeout(() => title.innerHTML = titleText, 10000);
               } else data.json().then(loadTable);
           });
+          //navigator.clipboard.writeText("url");
       }
     </script>
   </body>
