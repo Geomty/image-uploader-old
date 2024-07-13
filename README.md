@@ -1,5 +1,5 @@
 # image uploader (old)
 
-moved to https://github.com/Geomty/image-uploader
+Moved to https://github.com/Geomty/image-uploader
 
-made this a few years ago with zero css
+Made this a few years ago with zero css
